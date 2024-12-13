@@ -24,7 +24,7 @@ const App = () => {
         setToken('');
         setRole('');
         setUsername('');
-        navigate('/login'); // Redirect to the login page
+        navigate('/login');
     };
 
     return (

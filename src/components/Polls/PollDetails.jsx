@@ -59,7 +59,7 @@ const PollDetails = ({ token, role }) => {
             const response = await axios.delete(`http://localhost:5000/api/polls/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            navigate('/polls'); // Redirect to the polls list after deletion
+            navigate('/polls'); 
             setMessage("Poll deleted", response.data.message);
         } catch (error) {
             setMessage(error.response.data.message);
@@ -71,17 +71,26 @@ const PollDetails = ({ token, role }) => {
     return (
         <div>
             <h2>{poll.question}</h2>
-            <ul>
-                {poll.options.map((option) => (
-                    <li key={option._id}>
-                        <label>
-                            <input type="radio" name="option" value={option._id} onChange={(e) => setSelectedOption(e.target.value)} />
-                            {option.name}
-                        </label>
-                    </li>
-                ))}
-            </ul>
-            {role === 'user' &&  <button onClick={handleVote}>Vote</button>}
+            {role !== 'admin' && (
+                <>
+                    <ul>
+                        {poll.options.map((option) => (
+                            <li key={option._id}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="option"
+                                        value={option._id}
+                                        onChange={(e) => setSelectedOption(e.target.value)}
+                                    />
+                                    {option.name}
+                                </label>
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleVote}>Vote</button>
+                </>
+            )}
             {role === 'admin' && (
                 <div>
                     <h3>Results</h3>
@@ -92,14 +101,14 @@ const PollDetails = ({ token, role }) => {
                             </li>
                         ))}
                     </ul>
+                    <button onClick={handleDelete}>Delete Poll</button>
                 </div>
             )}
             {message && <p>{message}</p>}
-            <button onClick={handleDelete}>Delete Poll</button>
         </div>
     );
-};
-
+} 
+ 
 PollDetails.propTypes = {
     token: PropTypes.string.isRequired,
     role: PropTypes.string.isRequired

@@ -1,18 +1,42 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import Register from './Components/Auth/Register';
-import Login from './Components/Auth/Login';
-import CreatePoll from './Components/Polls/CreatePoll';
-import PollList from './Components/Polls/Polllist';
-import PollDetails from './Components/Polls/PollDetails';
+import Register from './components/Auth/Register';
+import Login from './components/Auth/Login';
+import CreatePoll from './components/Polls/CreatePoll';
+import PollList from './components/Polls/PollList';
+import PollDetails from './components/Polls/PollDetails';
 import './App.css';
 
 const App = () => {
-    const [token, setToken] = useState('');
-    const [role, setRole] = useState('');
-    const [username, setUsername] = useState('');
+    const [token, setToken] = useState(localStorage.getItem('token') || '');
+    const [role, setRole] = useState(localStorage.getItem('role') || '');
+    const [username, setUsername] = useState(localStorage.getItem('username') || '');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('token');
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (role) {
+            localStorage.setItem('role', role);
+        } else {
+            localStorage.removeItem('role');
+        }
+    }, [role]);
+
+    useEffect(() => {
+        if (username) {
+            localStorage.setItem('username', username);
+        } else {
+            localStorage.removeItem('username');
+        }
+    }, [username]);
 
     const handleLogin = (token, role, username) => {
         setToken(token);
@@ -24,6 +48,9 @@ const App = () => {
         setToken('');
         setRole('');
         setUsername('');
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('username');
         navigate('/login');
     };
 
